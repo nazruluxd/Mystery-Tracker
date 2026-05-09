@@ -1,5 +1,6 @@
 {
   "name": "mystery-tracker",
+  "homepage": "https://nazruluxd.github.io/mystery-tracker",
   "version": "1.0.0",
   "description": "A professional mystery tracker app to track unsolved questions and mysteries",
   "main": "index.js",
