@@ -19,5 +19,5 @@ export default defineConfig({
       },
     },
   },
-  base: '/mystery-tracker/',
+  base: '/Mystery-Tracker/',
 })
