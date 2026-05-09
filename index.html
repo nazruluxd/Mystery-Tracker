@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Mystery Tracker"/>
-  <title>🔍 Mystery Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>🔍 Mystery Tracker Bangladesh</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%);
       min-height: 100vh;
       color: white;
       font-family: Arial, sans-serif;
@@ -18,8 +19,8 @@
 
     .glass {
       backdrop-filter: blur(20px);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .fade-in {
@@ -31,238 +32,343 @@
         opacity: 0;
         transform: translateY(10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0px);
       }
     }
+
+    textarea::-webkit-scrollbar,
+    div::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    textarea::-webkit-scrollbar-thumb,
+    div::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 20px;
+    }
   </style>
 </head>
 
 <body>
-  <button
-  onclick="bulkImport()"
-  class="bg-purple-500 hover:bg-purple-600 transition-all rounded-xl p-3 font-bold w-full mt-3"
->
-  Bulk Import Bangladesh Mysteries
-</button>
 
-  <div class="max-w-5xl mx-auto p-6">
+  <div class="max-w-7xl mx-auto p-6">
 
     <div class="text-center mb-10">
+
       <h1 class="text-5xl font-bold mb-4">
-        🔍 Mystery Tracker
+        🔍 Mystery Tracker Bangladesh
       </h1>
 
       <p class="text-slate-300 text-lg">
-        Track your unanswered questions and mysteries
+        বাংলাদেশের ভাইরাল, রহস্যময় ও ডিজিটাল ইস্যু ট্র্যাকার
       </p>
+
     </div>
 
-    <div class="glass rounded-2xl p-6 mb-8">
+    <!-- SINGLE ADD -->
+
+    <div class="glass rounded-3xl p-6 mb-8">
+
+      <h2 class="text-2xl font-bold mb-6">
+        Add Single Mystery
+      </h2>
 
       <div class="grid md:grid-cols-3 gap-4">
 
-        <input
-          id="title"
-          type="text"
-          placeholder="Mystery title..."
-          class="bg-slate-900/60 border border-slate-700 rounded-xl p-3 outline-none"
-        />
+        <input id="title" type="text" placeholder="Mystery title..."
+          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none" />
 
-        <select
-          id="priority"
-          class="bg-slate-900/60 border border-slate-700 rounded-xl p-3 outline-none"
-        >
+        <select id="priority"
+          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none">
           <option>Low</option>
           <option>Medium</option>
           <option>High</option>
         </select>
 
-        <button
-          onclick="addMystery()"
-          class="bg-cyan-500 hover:bg-cyan-600 transition-all rounded-xl p-3 font-bold"
-        >
+        <button onclick="addMystery()"
+          class="bg-cyan-500 hover:bg-cyan-600 rounded-xl p-3 font-bold transition-all">
           Add Mystery
         </button>
 
       </div>
 
-      <textarea
-        id="description"
-        placeholder="Describe your mystery..."
-        class="w-full mt-4 bg-slate-900/60 border border-slate-700 rounded-xl p-4 outline-none h-32"
-      ></textarea>
+      <textarea id="description" placeholder="Description..."
+        class="w-full mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none h-32"></textarea>
 
     </div>
 
-    <div class="grid md:grid-cols-3 gap-4 mb-8">
+    <!-- BULK IMPORT -->
+
+    <div class="glass rounded-3xl p-6 mb-8">
+
+      <div class="flex flex-wrap gap-4 justify-between items-center mb-4">
+
+        <h2 class="text-2xl font-bold">
+          Bulk Import Mysteries
+        </h2>
+
+        <button onclick="loadBangladeshMysteries()"
+          class="bg-purple-500 hover:bg-purple-600 px-5 py-3 rounded-xl font-bold transition-all">
+          Auto Load 50 Mysteries
+        </button>
+
+      </div>
+
+      <textarea id="bulkInput" placeholder="Paste full mystery article here..."
+        class="w-full h-72 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none"></textarea>
+
+      <button onclick="importBulkText()"
+        class="mt-4 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold transition-all">
+        Import From Text
+      </button>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="grid md:grid-cols-4 gap-4 mb-8">
 
       <div class="glass rounded-2xl p-6 text-center">
-        <h2 class="text-slate-300 text-sm mb-2">Total Mysteries</h2>
-        <p id="totalCount" class="text-4xl font-bold">0</p>
+        <h2 class="text-slate-300 text-sm mb-2">
+          Total
+        </h2>
+
+        <p id="totalCount" class="text-4xl font-bold">
+          0
+        </p>
       </div>
 
       <div class="glass rounded-2xl p-6 text-center">
-        <h2 class="text-slate-300 text-sm mb-2">Solved</h2>
-        <p id="solvedCount" class="text-4xl font-bold text-green-400">0</p>
+        <h2 class="text-slate-300 text-sm mb-2">
+          Solved
+        </h2>
+
+        <p id="solvedCount" class="text-4xl font-bold text-green-400">
+          0
+        </p>
       </div>
 
       <div class="glass rounded-2xl p-6 text-center">
-        <h2 class="text-slate-300 text-sm mb-2">Unsolved</h2>
-        <p id="unsolvedCount" class="text-4xl font-bold text-red-400">0</p>
+        <h2 class="text-slate-300 text-sm mb-2">
+          Unsolved
+        </h2>
+
+        <p id="unsolvedCount" class="text-4xl font-bold text-red-400">
+          0
+        </p>
+      </div>
+
+      <div class="glass rounded-2xl p-6 text-center">
+
+        <h2 class="text-slate-300 text-sm mb-2">
+          Search
+        </h2>
+
+        <input id="searchInput" onkeyup="renderMysteries()" placeholder="Search..."
+          class="w-full bg-slate-900/70 border border-slate-700 rounded-lg p-2 outline-none" />
+
       </div>
 
     </div>
 
-    <div id="mysteryList" class="space-y-4"></div>
+    <!-- LIST -->
+
+    <div id="mysteryList" class="grid md:grid-cols-2 gap-6"></div>
 
   </div>
 
   <script>
 
-    function bulkImport() {
-
-  const bulkData = [
-    {
-      title: "স্বপ্ন পূরণের বাইক রহস্য",
-      description: "নিজের শখের বাইক বিক্রি করতে গিয়ে কান্নায় ভেঙে পড়া এক যুবকের ভিডিও ভাইরাল। রহস্য হলো, কে সেই অজ্ঞাত পরিচয় দানকারী ব্যক্তি যিনি তাকে বাইকটি আবার কিনে দিয়েছেন?",
-      priority: "High"
-    },
-
-    {
-      title: "মেট গালায় বাংলাদেশি তারকাদের ভুয়া উপস্থিতি",
-      description: "এআই দিয়ে তৈরি মেট গালায় বাংলাদেশি সেলিব্রিটিদের ছবি ভাইরাল হয়েছে, যা অনেকে সত্যি বলে বিশ্বাস করেছেন।",
-      priority: "Medium"
-    },
-
-    {
-      title: "ফ্লোরিডায় বাংলাদেশি ছাত্রী বৃষ্টি হত্যাকাণ্ড",
-      description: "যুক্তরাষ্ট্রে পিএইচডি শিক্ষার্থী নাহিদা সুলতানা বৃষ্টির রহস্যজনক মৃত্যু নিয়ে উত্তাল সোশ্যাল মিডিয়া।",
-      priority: "High"
-    },
-
-    {
-      title: "কিউট অপরাধীর ফ্যানডম",
-      description: "মাদকসহ গ্রেফতার হওয়া এক তরুণীর ছবি ভাইরাল হওয়ার পর সাধারণ মানুষের ক্ষোভ থেকে ক্রাশে রূপান্তরের মনস্তাত্ত্বিক রহস্য।",
-      priority: "Medium"
-    },
-
-    {
-      title: "নিখোঁজ উদ্ভাবকের গল্প",
-      description: "এক তরুণ উদ্ভাবকের কাজ ভাইরাল হওয়ার পর সরকারি সাহায্য ঘোষণার ঠিক পরপরই তার জনসমক্ষে না আসা নিয়ে রহস্য।",
-      priority: "High"
-    },
-
-    {
-      title: "পুরানো ভিডিওর ফাঁদ",
-      description: "কুষ্টিয়ায় কয়েক বছরের পুরনো ভিডিও নতুন বলে প্রচার করে গণপিটুনির ঘটনা।",
-      priority: "High"
-    },
-
-    {
-      title: "এআই ভয়েস ক্লোনিং স্ক্যাম",
-      description: "পরিচিত মানুষের গলার আওয়াজ নকল করে টাকা হাতিয়ে নেওয়ার নতুন ডিজিটাল প্রতারণা।",
-      priority: "High"
-    },
-
-    {
-      title: "সাইবার সিকিউরিটি আইন ২০২৬",
-      description: "রাস্তায় ভিডিও করলেই জেল হওয়ার গুজব এবং এর আসল সত্য নিয়ে বিভ্রান্তি।",
-      priority: "Medium"
-    },
-
-    {
-      title: "প্রথম H5N1 রোগী নিয়ে গুজব",
-      description: "সরকারি বার্তার আগেই কোনো শিশুর বার্ড ফ্লুতে আক্রান্ত হওয়ার ভাইরাল পোস্ট।",
-      priority: "Medium"
-    },
-
-    {
-      title: "রহস্যময় ইউটিউব চ্যানেল",
-      description: "গভীর রাতে রহস্যজনক লাইভ করা কিছু চ্যানেলের হঠাৎ জনপ্রিয়তা বৃদ্ধি।",
-      priority: "Low"
-    }
-  ]
-
-  mysteries.push(...bulkData)
-
-  saveMysteries()
-
-  renderMysteries()
-
-  alert("10 mysteries imported successfully!")
-}
-
-    let mysteries = JSON.parse(localStorage.getItem('mysteries')) || []
+    let mysteries =
+      JSON.parse(localStorage.getItem('mysteries')) || []
 
     function saveMysteries() {
-      localStorage.setItem('mysteries', JSON.stringify(mysteries))
+
+      localStorage.setItem(
+        'mysteries',
+        JSON.stringify(mysteries)
+      )
     }
 
     function updateStats() {
 
-      document.getElementById('totalCount').innerText = mysteries.length
+      document.getElementById('totalCount').innerText =
+        mysteries.length
 
-      const solved = mysteries.filter(m => m.solved).length
+      const solved =
+        mysteries.filter(m => m.solved).length
 
-      document.getElementById('solvedCount').innerText = solved
+      document.getElementById('solvedCount').innerText =
+        solved
 
       document.getElementById('unsolvedCount').innerText =
         mysteries.length - solved
     }
 
+    function addMystery() {
+
+      const title =
+        document.getElementById('title').value.trim()
+
+      const description =
+        document.getElementById('description').value.trim()
+
+      const priority =
+        document.getElementById('priority').value
+
+      if (!title || !description) {
+
+        alert('Please fill all fields')
+
+        return
+      }
+
+      mysteries.unshift({
+        title,
+        description,
+        priority,
+        solved: false
+      })
+
+      saveMysteries()
+
+      renderMysteries()
+
+      document.getElementById('title').value = ''
+      document.getElementById('description').value = ''
+    }
+
+    function deleteMystery(index) {
+
+      if (!confirm('Delete this mystery?')) {
+        return
+      }
+
+      mysteries.splice(index, 1)
+
+      saveMysteries()
+
+      renderMysteries()
+    }
+
+    function toggleSolved(index) {
+
+      mysteries[index].solved =
+        !mysteries[index].solved
+
+      saveMysteries()
+
+      renderMysteries()
+    }
+
+    function editMystery(index) {
+
+      const mystery =
+        mysteries[index]
+
+      const newTitle =
+        prompt('Edit title:', mystery.title)
+
+      if (newTitle === null) return
+
+      const newDescription =
+        prompt(
+          'Edit description:',
+          mystery.description
+        )
+
+      if (newDescription === null) return
+
+      const newPriority =
+        prompt(
+          'Edit priority (Low/Medium/High):',
+          mystery.priority
+        )
+
+      if (newPriority === null) return
+
+      mysteries[index] = {
+        ...mystery,
+        title: newTitle,
+        description: newDescription,
+        priority: newPriority
+      }
+
+      saveMysteries()
+
+      renderMysteries()
+
+      alert('Mystery updated!')
+    }
+
     function renderMysteries() {
 
-      const container = document.getElementById('mysteryList')
+      const container =
+        document.getElementById('mysteryList')
+
+      const search =
+        document.getElementById('searchInput')
+          .value
+          .toLowerCase()
 
       container.innerHTML = ''
 
-      mysteries.reverse().forEach((mystery, index) => {
+      mysteries
+        .filter(item =>
+          item.title.toLowerCase().includes(search) ||
+          item.description.toLowerCase().includes(search)
+        )
+        .forEach((mystery, index) => {
 
-        const div = document.createElement('div')
+          const card =
+            document.createElement('div')
 
-        div.className =
-          'glass rounded-2xl p-6 fade-in'
+          card.className =
+            'glass rounded-3xl p-6 fade-in'
 
-        div.innerHTML = `
-          <div class="flex justify-between items-start gap-4">
+          card.innerHTML = `
+            <div class="flex justify-between items-start gap-4">
 
-            <div class="flex-1">
+              <div class="flex-1">
 
-              <div class="flex items-center gap-3 mb-3">
+                <div class="flex flex-wrap gap-2 items-center mb-4">
 
-                <h2 class="text-2xl font-bold">
-                  ${mystery.title}
-                </h2>
+                  <h2 class="text-3xl font-bold">
+                    ${mystery.title}
+                  </h2>
 
-                <span class="
-                  px-3 py-1 rounded-full text-sm
-                  ${
-                    mystery.priority === 'High'
-                      ? 'bg-red-500/20 text-red-300'
-                      : mystery.priority === 'Medium'
-                      ? 'bg-yellow-500/20 text-yellow-300'
-                      : 'bg-green-500/20 text-green-300'
-                  }
-                ">
-                  ${mystery.priority}
-                </span>
+                  <span class="
+                    px-3 py-1 rounded-full text-sm
+                    ${
+                      mystery.priority === 'High'
+                        ? 'bg-red-500/20 text-red-300'
+                        : mystery.priority === 'Medium'
+                        ? 'bg-yellow-500/20 text-yellow-300'
+                        : 'bg-green-500/20 text-green-300'
+                    }
+                  ">
+                    ${mystery.priority}
+                  </span>
+
+                </div>
+
+                <p class="text-slate-300 whitespace-pre-wrap leading-8 text-lg">
+                  ${mystery.description}
+                </p>
 
               </div>
 
-              <p class="text-slate-300 whitespace-pre-wrap">
-                ${mystery.description}
-              </p>
-
             </div>
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-wrap gap-3 mt-6">
 
               <button
                 onclick="toggleSolved(${index})"
                 class="
-                  px-4 py-2 rounded-lg font-semibold
+                  px-4 py-2 rounded-xl font-bold
                   ${
                     mystery.solved
                       ? 'bg-green-500 hover:bg-green-600'
@@ -274,76 +380,177 @@
               </button>
 
               <button
+                onclick="editMystery(${index})"
+                class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold"
+              >
+                Edit
+              </button>
+
+              <button
                 onclick="deleteMystery(${index})"
-                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-semibold"
+                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold"
               >
                 Delete
               </button>
 
             </div>
+          `
 
-          </div>
-        `
-
-        container.appendChild(div)
-
-      })
-
-      mysteries.reverse()
+          container.appendChild(card)
+        })
 
       updateStats()
     }
 
-    function addMystery() {
+    function importBulkText() {
 
-      const title = document.getElementById('title').value.trim()
+      const text =
+        document.getElementById('bulkInput').value
 
-      const description =
-        document.getElementById('description').value.trim()
+      if (!text.trim()) {
 
-      const priority =
-        document.getElementById('priority').value
+        alert('Paste something first')
 
-      if (!title || !description) {
-        alert('Please fill all fields')
         return
       }
 
-      mysteries.push({
-        title,
-        description,
-        priority,
-        solved: false
+      const items =
+        text.split(/\d+\./).filter(item => item.trim())
+
+      items.forEach(item => {
+
+        const clean =
+          item.trim()
+
+        const firstSentence =
+          clean.split('।')[0]
+
+        mysteries.unshift({
+          title: firstSentence,
+          description: clean,
+          priority: 'Medium',
+          solved: false
+        })
+
       })
 
       saveMysteries()
+
       renderMysteries()
 
-      document.getElementById('title').value = ''
-      document.getElementById('description').value = ''
+      alert(items.length + ' mysteries imported!')
+
+      document.getElementById('bulkInput').value = ''
     }
 
-    function toggleSolved(index) {
+    function loadBangladeshMysteries() {
 
-      const realIndex =
-        mysteries.length - 1 - index
+      const sample = `
+১. স্বপ্ন পূরণের বাইক রহস্য: নিজের শখের বাইক বিক্রি করতে গিয়ে কান্নায় ভেঙে পড়া এক যুবকের ভিডিও ভাইরাল। রহস্য হলো, কে সেই অজ্ঞাত পরিচয় দানকারী ব্যক্তি যিনি তাকে বাইকটি আবার কিনে দিয়েছেন?
 
-      mysteries[realIndex].solved =
-        !mysteries[realIndex].solved
+২. মেট গালায় বাংলাদেশি তারকাদের ভুয়া উপস্থিতি: এআই দিয়ে তৈরি মেট গালায় বাংলাদেশি সেলিব্রিটিদের ছবি ভাইরাল হয়েছে।
 
-      saveMysteries()
-      renderMysteries()
-    }
+৩. ফ্লোরিডায় বাংলাদেশি ছাত্রী বৃষ্টি হত্যাকাণ্ড।
 
-    function deleteMystery(index) {
+৪. কিউট অপরাধীর ফ্যানডম।
 
-      const realIndex =
-        mysteries.length - 1 - index
+৫. নিখোঁজ উদ্ভাবকের গল্প।
 
-      mysteries.splice(realIndex, 1)
+৬. পুরানো ভিডিওর ফাঁদ।
 
-      saveMysteries()
-      renderMysteries()
+৭. এআই ভয়েস ক্লোনিং স্ক্যাম।
+
+৮. সাইবার সিকিউরিটি আইন ২০২৬।
+
+৯. প্রথম H5N1 রোগী নিয়ে গুজব।
+
+১০. রহস্যময় ইউটিউব চ্যানেল।
+
+১১. ৭০% বোট ট্রাফিক।
+
+১২. রাজনৈতিক অপপ্রচার।
+
+১৩. ডিপফেক পর্নোগ্রাফি।
+
+১৪. টুইটারে সাম্প্রদায়িক বিদ্বেষ।
+
+১৫. ফেসবুক টিকটকের অসহযোগিতা।
+
+১৬. হাইব্রিড ইনফরমেশন ওয়ার।
+
+১৭. তথ্য চুরির অ্যাপ।
+
+১৮. ডিএসএ মামলার ভবিষ্যৎ।
+
+১৯. অ্যালগরিদম সেন্সরশিপ।
+
+২০. ব্যান বনাম ভিপিএন।
+
+২১. ১৬ বছরের নিচে সোশ্যাল মিডিয়া নিষিদ্ধের দাবি।
+
+২২. অনলাইন রোমান্স ট্র্যাপ।
+
+২৩. সোশ্যাল মিডিয়া ও বাল্যবিবাহ।
+
+২৪. ভাইরাল হওয়ার নেশায় আত্মহত্যা।
+
+২৫. ধর্ম অবমাননার ভুয়া গুজব।
+
+২৬. আন্তর্জাতিক অপরাধ ট্রাইব্যুনাল নিয়ে গুজব।
+
+২৭. প্রেস অ্যাক্রেডিটেশন কার্ড বাতিল।
+
+২৮. ভুয়া নিয়োগ বিজ্ঞপ্তি।
+
+২৯. ডিজিটাল সার্বভৌমত্ব।
+
+৩০. পদ্মা সেতু ও নরবলি গুজব ২০২৬।
+
+৩১. প্রাইভেট গ্রুপে নারী অবমাননা।
+
+৩২. ভুয়া দান খয়রাত পেজ।
+
+৩৩. ফ্রিল্যান্সিং স্ক্যাম।
+
+৩৪. অনলাইন জুয়া ও বিজ্ঞাপনের জোয়ার।
+
+৩৫. ডেটা সেন্টার রহস্য।
+
+৩৬. ভুয়া ইনফ্লুয়েন্সার কালচার।
+
+৩৭. বিটিআরসি রেসপন্স টাইম।
+
+৩৮. লাইভ স্ট্রিমিং ও ব্যক্তিগত গোপনীয়তা।
+
+৩৯. কিডস কন্টেন্ট ও ব্রেন ওয়াশ।
+
+৪০. স্মার্ট এনআইডি কার্ডের তথ্য চুরি।
+
+৪১. অনলাইন ক্লাস বনাম গেমিং আসক্তি।
+
+৪২. ফেসবুক পেজের এডমিন বনাম মালিক দ্বন্দ্ব।
+
+৪৩. সাইবার বুলিং ও মানসিক স্বাস্থ্য।
+
+৪৪. ই কমার্স প্রতারণা।
+
+৪৫. ভুয়া স্কলারশিপ অফার।
+
+৪৬. কপিরাইট স্ট্রাইক সিন্ডিকেট।
+
+৪৭. ভয়েস মেসেজের গোপনীয়তা।
+
+৪৮. টিকটক সেলিব্রিটি ও মাদকচক্র।
+
+৪৯. ইনস্টাগ্রাম রিলস ও নৈতিক অবক্ষয়।
+
+৫০. ডিজিটাল লিটারেসি বা জ্ঞানের অভাব।
+      `
+
+      document.getElementById('bulkInput').value =
+        sample
+
+      alert('50 Bangladesh mysteries loaded!')
     }
 
     renderMysteries()
@@ -351,4 +558,5 @@
   </script>
 
 </body>
+
 </html>
