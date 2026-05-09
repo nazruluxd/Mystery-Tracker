@@ -1,12 +1,14 @@
-Full Working index.html
-
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Mystery Tracker Bangladesh</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
     body {
       background: linear-gradient(135deg, #020617, #0f172a, #1e293b);
@@ -14,288 +16,507 @@ Full Working index.html
       color: white;
       font-family: Arial, sans-serif;
     }
+
     .glass {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    textarea,
+    input,
+    select {
+      color: white;
+    }
+
+    button {
+      transition: 0.2s;
     }
   </style>
 </head>
+
 <body>
-<div class="max-w-7xl mx-auto p-6">
-  <div class="text-center mb-10">
-    <h1 class="text-5xl font-bold mb-4">
-      🔍 Mystery Tracker Bangladesh
-    </h1>
-    <p class="text-slate-300 text-lg">
-      বাংলাদেশের ভাইরাল ও রহস্যময় ইস্যু ট্র্যাকার
-    </p>
-  </div>
-  <!-- ADD SINGLE -->
-  <div class="glass rounded-3xl p-6 mb-8">
-    <h2 class="text-2xl font-bold mb-5">
-      Add Single Mystery
-    </h2>
-    <div class="grid md:grid-cols-3 gap-4">
-      <input
-        id="title"
-        type="text"
-        placeholder="Mystery title"
-        class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-      >
-      <select
-        id="priority"
-        class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-      >
-        <option>Low</option>
-        <option>Medium</option>
-        <option>High</option>
-      </select>
-      <button
-        onclick="addMystery()"
-        class="bg-cyan-500 hover:bg-cyan-600 rounded-xl p-3 font-bold"
-      >
-        Add Mystery
-      </button>
+
+  <div class="max-w-7xl mx-auto p-6">
+
+    <!-- HEADER -->
+
+    <div class="text-center mb-10">
+
+      <h1 class="text-5xl font-bold mb-4">
+        🔍 Mystery Tracker Bangladesh
+      </h1>
+
+      <p class="text-slate-300 text-lg">
+        বাংলাদেশের ভাইরাল ও রহস্যময় ইস্যু ট্র্যাকার
+      </p>
+
     </div>
-    <textarea
-      id="description"
-      placeholder="Description"
-      class="w-full mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none h-32"
-    ></textarea>
-  </div>
-  <!-- BULK IMPORT -->
-  <div class="glass rounded-3xl p-6 mb-8">
-    <div class="flex flex-wrap justify-between gap-4 mb-4">
-      <h2 class="text-2xl font-bold">
-        Bulk Import
+
+    <!-- ADD SINGLE -->
+
+    <div class="glass rounded-3xl p-6 mb-8">
+
+      <h2 class="text-2xl font-bold mb-5">
+        Add Single Mystery
       </h2>
+
+      <div class="grid md:grid-cols-3 gap-4">
+
+        <input
+          id="title"
+          type="text"
+          placeholder="Mystery title"
+          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+        >
+
+        <select
+          id="priority"
+          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+        >
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+
+        <button
+          onclick="addMystery()"
+          class="bg-cyan-500 hover:bg-cyan-600 rounded-xl p-3 font-bold"
+        >
+          Add Mystery
+        </button>
+
+      </div>
+
+      <textarea
+        id="description"
+        placeholder="Description"
+        class="w-full mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none h-32"
+      ></textarea>
+
+    </div>
+
+    <!-- BULK IMPORT -->
+
+    <div class="glass rounded-3xl p-6 mb-8">
+
+      <div class="flex flex-wrap justify-between gap-4 mb-4">
+
+        <h2 class="text-2xl font-bold">
+          Bulk Import
+        </h2>
+
+        <button
+          onclick="loadSample()"
+          class="bg-purple-500 hover:bg-purple-600 px-5 py-3 rounded-xl font-bold"
+        >
+          Auto Load Sample
+        </button>
+
+      </div>
+
+      <textarea
+        id="bulkInput"
+        placeholder="Paste all mysteries here"
+        class="w-full h-72 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none"
+      ></textarea>
+
       <button
-        onclick="loadSample()"
-        class="bg-purple-500 hover:bg-purple-600 px-5 py-3 rounded-xl font-bold"
+        onclick="importBulkText()"
+        class="mt-4 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold"
       >
-        Auto Load Sample
+        Import From Text
       </button>
+
     </div>
-    <textarea
-      id="bulkInput"
-      placeholder="Paste all mysteries here"
-      class="w-full h-72 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none"
-    ></textarea>
-    <button
-      onclick="importBulkText()"
-      class="mt-4 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold"
-    >
-      Import From Text
-    </button>
+
+    <!-- SEARCH -->
+
+    <div class="glass rounded-2xl p-5 mb-8">
+
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search mysteries..."
+        onkeyup="renderMysteries()"
+        class="w-full bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+      >
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="grid md:grid-cols-3 gap-4 mb-8">
+
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-slate-300 mb-2">Total</p>
+        <h2 id="totalCount" class="text-4xl font-bold">0</h2>
+      </div>
+
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-slate-300 mb-2">Solved</p>
+        <h2 id="solvedCount" class="text-4xl font-bold text-green-400">0</h2>
+      </div>
+
+      <div class="glass rounded-2xl p-6 text-center">
+        <p class="text-slate-300 mb-2">Unsolved</p>
+        <h2 id="unsolvedCount" class="text-4xl font-bold text-red-400">0</h2>
+      </div>
+
+    </div>
+
+    <!-- LIST -->
+
+    <div
+      id="mysteryList"
+      class="grid md:grid-cols-2 gap-6"
+    ></div>
+
   </div>
-  <!-- SEARCH -->
-  <div class="glass rounded-2xl p-5 mb-8">
-    <input
-      id="searchInput"
-      type="text"
-      placeholder="Search mysteries..."
-      onkeyup="renderMysteries()"
-      class="w-full bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-    >
-  </div>
-  <!-- STATS -->
-  <div class="grid md:grid-cols-3 gap-4 mb-8">
-    <div class="glass rounded-2xl p-6 text-center">
-      <p class="text-slate-300 mb-2">Total</p>
-      <h2 id="totalCount" class="text-4xl font-bold">0</h2>
-    </div>
-    <div class="glass rounded-2xl p-6 text-center">
-      <p class="text-slate-300 mb-2">Solved</p>
-      <h2 id="solvedCount" class="text-4xl font-bold text-green-400">0</h2>
-    </div>
-    <div class="glass rounded-2xl p-6 text-center">
-      <p class="text-slate-300 mb-2">Unsolved</p>
-      <h2 id="unsolvedCount" class="text-4xl font-bold text-red-400">0</h2>
-    </div>
-  </div>
-  <!-- MYSTERY LIST -->
-  <div id="mysteryList" class="grid md:grid-cols-2 gap-6"></div>
-</div>
-<script>
-var mysteries = JSON.parse(localStorage.getItem('mysteries')) || [];
-function saveMysteries() {
-  localStorage.setItem('mysteries', JSON.stringify(mysteries));
-}
-function updateStats() {
-  var solved = mysteries.filter(function(item) {
-    return item.solved;
-  }).length;
-  document.getElementById('totalCount').innerText = mysteries.length;
-  document.getElementById('solvedCount').innerText = solved;
-  document.getElementById('unsolvedCount').innerText = mysteries.length - solved;
-}
-function addMystery() {
-  var title = document.getElementById('title').value.trim();
-  var description = document.getElementById('description').value.trim();
-  var priority = document.getElementById('priority').value;
-  if (!title || !description) {
-    alert('Please fill all fields');
-    return;
-  }
-  mysteries.unshift({
-    title: title,
-    description: description,
-    priority: priority,
-    solved: false
-  });
-  saveMysteries();
-  // FIREBASE CONFIG\n\nvar firebaseConfig = {\n  apiKey: "YOUR_API_KEY",\n  authDomain: "YOUR_PROJECT.firebaseapp.com",\n  projectId: "YOUR_PROJECT_ID",\n  storageBucket: "YOUR_PROJECT.appspot.com",\n  messagingSenderId: "YOUR_SENDER_ID",\n  appId: "YOUR_APP_ID"\n};\n\n// Uncomment after adding Firebase SDK\n// firebase.initializeApp(firebaseConfig);\n\nrenderMysteries();
-  document.getElementById('title').value = '';
-  document.getElementById('description').value = '';
-}
-function deleteMystery(index) {
-  var confirmDelete = confirm('Delete this mystery?');
-  if (!confirmDelete) {
-    return;
-  }
-  mysteries.splice(index, 1);
-  saveMysteries();
-  renderMysteries();
-}
-function toggleSolved(index) {
-  mysteries[index].solved = !mysteries[index].solved;
-  saveMysteries();
-  renderMysteries();
-}
-function editMystery(index) {
-  var mystery = mysteries[index];
-  var newTitle = prompt('Edit title', mystery.title);
-  if (newTitle === null) {
-    return;
-  }
-  var newDescription = prompt('Edit description', mystery.description);
-  if (newDescription === null) {
-    return;
-  }
-  var newPriority = prompt('Priority: Low / Medium / High', mystery.priority);
-  if (newPriority === null) {
-    return;
-  }
-  mysteries[index] = {
-    title: newTitle,
-    description: newDescription,
-    priority: newPriority,
-    solved: mystery.solved
-  };
-  saveMysteries();
-  renderMysteries();
-}
-function renderMysteries() {
-  var container = document.getElementById('mysteryList');
-  var search = document.getElementById('searchInput').value.toLowerCase();
-  container.innerHTML = '';
-  mysteries.forEach(function(mystery, index) {
-    var titleMatch = mystery.title.toLowerCase().indexOf(search) !== -1;
-    var descMatch = mystery.description.toLowerCase().indexOf(search) !== -1;
-    if (!titleMatch && !descMatch) {
-      return;
+
+  <!-- APP SCRIPT -->
+
+  <script>
+
+    var mysteries =
+      JSON.parse(localStorage.getItem('mysteries')) || [];
+
+    function saveMysteries() {
+
+      localStorage.setItem(
+        'mysteries',
+        JSON.stringify(mysteries)
+      );
     }
-    var priorityClass = 'bg-green-500/20 text-green-300';
-    if (mystery.priority === 'Medium') {
-      priorityClass = 'bg-yellow-500/20 text-yellow-300';
+
+    function updateStats() {
+
+      var solved =
+        mysteries.filter(function(item) {
+          return item.solved;
+        }).length;
+
+      document.getElementById('totalCount').innerText =
+        mysteries.length;
+
+      document.getElementById('solvedCount').innerText =
+        solved;
+
+      document.getElementById('unsolvedCount').innerText =
+        mysteries.length - solved;
     }
-    if (mystery.priority === 'High') {
-      priorityClass = 'bg-red-500/20 text-red-300';
+
+    function addMystery() {
+
+      var title =
+        document.getElementById('title').value.trim();
+
+      var description =
+        document.getElementById('description').value.trim();
+
+      var priority =
+        document.getElementById('priority').value;
+
+      if (!title || !description) {
+
+        alert('Please fill all fields');
+
+        return;
+      }
+
+      mysteries.unshift({
+        title: title,
+        description: description,
+        priority: priority,
+        solved: false
+      });
+
+      saveMysteries();
+
+      renderMysteries();
+
+      document.getElementById('title').value = '';
+      document.getElementById('description').value = '';
     }
-    var solvedButton = '';
-    if (mystery.solved) {
-      solvedButton = '<button onclick="toggleSolved(' + index + ')" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl font-bold">Solved</button>';
-    } else {
-      solvedButton = '<button onclick="toggleSolved(' + index + ')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-xl font-bold">Mark Solved</button>';
+
+    function deleteMystery(index) {
+
+      if (!confirm('Delete this mystery?')) {
+        return;
+      }
+
+      mysteries.splice(index, 1);
+
+      saveMysteries();
+
+      renderMysteries();
     }
-    var card = document.createElement('div');
-    card.className = 'glass rounded-3xl p-6';
-    card.innerHTML =
-      '<div class="flex flex-wrap gap-2 items-center mb-5">' +
-      '<h2 class="text-3xl font-bold leading-tight">' + mystery.title + '</h2>' +
-      '<span class="px-3 py-1 rounded-full text-sm ' + priorityClass + '">' + mystery.priority + '</span>' +
-      '</div>' +
-      '<p class="text-slate-300 leading-8 text-lg whitespace-pre-wrap">' + mystery.description + '</p>' +
-      '<div class="flex flex-wrap gap-3 mt-8">' +
-      solvedButton +
-      '<button onclick="editMystery(' + index + ')" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold">Edit</button>' +
-      '<button onclick="deleteMystery(' + index + ')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>' +
-      '</div>';
-    container.appendChild(card);
-  });
-  updateStats();
-}
-function importBulkText() {
-  var text = document.getElementById('bulkInput').value;
-  if (!text.trim()) {
-    alert('Paste something first');
-    return;
-  }
-  var items = text.split(/[০-৯]+\./);
-  items.forEach(function(item) {
-    var clean = item.trim();
-    if (!clean) {
-      return;
+
+    function toggleSolved(index) {
+
+      mysteries[index].solved =
+        !mysteries[index].solved;
+
+      saveMysteries();
+
+      renderMysteries();
     }
-    var parts = clean.split(':');
-    var title = '';
-    var description = '';
-    if (parts.length > 1) {
-      title = parts[0].trim();
-      description = parts.slice(1).join(':').trim();
-    } else {
-      title = clean.substring(0, 60);
-      description = clean;
+
+    function editMystery(index) {
+
+      var mystery =
+        mysteries[index];
+
+      var newTitle =
+        prompt('Edit title', mystery.title);
+
+      if (newTitle === null) {
+        return;
+      }
+
+      var newDescription =
+        prompt('Edit description', mystery.description);
+
+      if (newDescription === null) {
+        return;
+      }
+
+      var newPriority =
+        prompt(
+          'Priority: Low / Medium / High',
+          mystery.priority
+        );
+
+      if (newPriority === null) {
+        return;
+      }
+
+      mysteries[index] = {
+        title: newTitle,
+        description: newDescription,
+        priority: newPriority,
+        solved: mystery.solved
+      };
+
+      saveMysteries();
+
+      renderMysteries();
     }
-    mysteries.unshift({
-      title: title,
-      description: description,
-      priority: 'Medium',
-      solved: false
-    });
-  });
-  saveMysteries();
-  renderMysteries();
-  alert('Imported successfully!');
-  document.getElementById('bulkInput').value = '';
-}
-function loadSample() {
-  document.getElementById('bulkInput').value =
+
+    function renderMysteries() {
+
+      var container =
+        document.getElementById('mysteryList');
+
+      var search =
+        document.getElementById('searchInput')
+          .value
+          .toLowerCase();
+
+      container.innerHTML = '';
+
+      mysteries.forEach(function(mystery, index) {
+
+        var titleMatch =
+          mystery.title.toLowerCase().indexOf(search) !== -1;
+
+        var descMatch =
+          mystery.description.toLowerCase().indexOf(search) !== -1;
+
+        if (!titleMatch && !descMatch) {
+          return;
+        }
+
+        var priorityClass =
+          'bg-green-500/20 text-green-300';
+
+        if (mystery.priority === 'Medium') {
+
+          priorityClass =
+            'bg-yellow-500/20 text-yellow-300';
+        }
+
+        if (mystery.priority === 'High') {
+
+          priorityClass =
+            'bg-red-500/20 text-red-300';
+        }
+
+        var solvedButton = '';
+
+        if (mystery.solved) {
+
+          solvedButton =
+            '<button onclick=\"toggleSolved(' + index + ')\" class=\"bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl font-bold\">Solved</button>';
+
+        } else {
+
+          solvedButton =
+            '<button onclick=\"toggleSolved(' + index + ')\" class=\"bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-xl font-bold\">Mark Solved</button>';
+        }
+
+        var card =
+          document.createElement('div');
+
+        card.className =
+          'glass rounded-3xl p-6';
+
+        card.innerHTML =
+
+          '<div class=\"flex flex-wrap gap-2 items-center mb-5\">' +
+
+          '<h2 class=\"text-3xl font-bold leading-tight\">' +
+          mystery.title +
+          '</h2>' +
+
+          '<span class=\"px-3 py-1 rounded-full text-sm ' +
+          priorityClass +
+          '\">' +
+          mystery.priority +
+          '</span>' +
+
+          '</div>' +
+
+          '<p class=\"text-slate-300 leading-8 text-lg whitespace-pre-wrap\">' +
+          mystery.description +
+          '</p>' +
+
+          '<div class=\"flex flex-wrap gap-3 mt-8\">' +
+
+          solvedButton +
+
+          '<button onclick=\"editMystery(' + index + ')\" class=\"bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold\">Edit</button>' +
+
+          '<button onclick=\"deleteMystery(' + index + ')\" class=\"bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold\">Delete</button>' +
+
+          '</div>';
+
+        container.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function importBulkText() {
+
+      var text =
+        document.getElementById('bulkInput').value;
+
+      if (!text.trim()) {
+
+        alert('Paste something first');
+
+        return;
+      }
+
+      var items =
+        text.split(/[০-৯]+\./);
+
+      items.forEach(function(item) {
+
+        var clean =
+          item.trim();
+
+        if (!clean) {
+          return;
+        }
+
+        var parts =
+          clean.split(':');
+
+        var title = '';
+        var description = '';
+
+        if (parts.length > 1) {
+
+          title =
+            parts[0].trim();
+
+          description =
+            parts.slice(1).join(':').trim();
+
+        } else {
+
+          title =
+            clean.substring(0, 60);
+
+          description =
+            clean;
+        }
+
+        mysteries.unshift({
+          title: title,
+          description: description,
+          priority: 'Medium',
+          solved: false
+        });
+      });
+
+      saveMysteries();
+
+      renderMysteries();
+
+      alert('Imported successfully!');
+
+      document.getElementById('bulkInput').value = '';
+    }
+
+    function loadSample() {
+
+      document.getElementById('bulkInput').value =
+
 `১. স্বপ্ন পূরণের বাইক রহস্য: নিজের শখের বাইক বিক্রি করতে গিয়ে কান্নায় ভেঙে পড়া এক যুবকের ভিডিও ভাইরাল।
+
 ২. এআই ভয়েস ক্লোনিং স্ক্যাম: পরিচিত মানুষের কণ্ঠস্বর নকল করে প্রতারণা।
+
 ৩. ডিপফেক পর্নোগ্রাফি: নারীদের লক্ষ্য করে তৈরি ভুয়া ভিডিও বৃদ্ধি।
+
 ৪. অনলাইন রোমান্স ট্র্যাপ: প্রেমের ফাঁদে ব্ল্যাকমেইল।
+
 ৫. কিডস কন্টেন্ট ও ব্রেন ওয়াশ: শিশুদের কার্টুনের আড়ালে ক্ষতিকর বার্তা।`;
-}
-renderMysteries();
-</script>
-  
-<script type="module">
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    }
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
-    authDomain: "mystery-fff8d.firebaseapp.com",
-    projectId: "mystery-fff8d",
-    storageBucket: "mystery-fff8d.firebasestorage.app",
-    messagingSenderId: "1082125532602",
-    appId: "1:1082125532602:web:33b205e3047200d95d3183",
-    measurementId: "G-LEL517VKNZ"
-  };
+    renderMysteries();
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-  
+  </script>
+
+  <!-- FIREBASE -->
+
+  <script type="module">
+
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+    import {
+      getFirestore
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
+
+      authDomain: "mystery-fff8d.firebaseapp.com",
+
+      projectId: "mystery-fff8d",
+
+      storageBucket: "mystery-fff8d.firebasestorage.app",
+
+      messagingSenderId: "1082125532602",
+
+      appId: "1:1082125532602:web:33b205e3047200d95d3183"
+    };
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const db =
+      getFirestore(app);
+
+    console.log("Firebase Connected");
+
+  </script>
+
 </body>
+
 </html>
