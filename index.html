@@ -1,183 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsIntel // Investigative Network</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: { 
-                extend: { 
-                    colors: { 
-                        intel: {
-                            bg: '#05070a',
-                            card: '#0d1117',
-                            input: '#010409',
-                            border: '#30363d',
-                            cyan: '#3fb1ff',
-                            rose: '#f85149',
-                            emerald: '#3fb950'
-                        }
-                    }
-                } 
-            }
-        }
-    </script>
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <meta charset="UTF-8" />
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-    <style>
-        body { background-color: #05070a; color: #c9d1d9; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
-        .glass { background: rgba(13, 17, 23, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+  <title>NEWS INTEL</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+    body {
+      background: #05070a;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+  </style>
+
 </head>
+
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        // --- FIREBASE CONFIG ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
-            authDomain: "mystery-fff8d.firebaseapp.com",
-            projectId: "mystery-fff8d",
-            storageBucket: "mystery-fff8d.firebasestorage.app",
-            messagingSenderId: "1082125532602",
-            appId: "1:1082125532602:web:33b205e3047200d95d3183"
-        };
+  <!-- BACKGROUND -->
 
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
+  <div class="fixed inset-0 opacity-20 pointer-events-none">
 
-        // --- ICONS (SVG) ---
-        const IconNews = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>;
-        const IconPlus = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
-        const IconTrash = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>;
+    <div class="absolute top-0 left-0 w-96 h-96 bg-cyan-500 blur-[150px]"></div>
 
-        const { useState, useEffect, useMemo } = React;
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 blur-[150px]"></div>
 
-        function App() {
-            const [view, setView] = useState('feed');
-            const [mysteries, setMysteries] = useState([]);
-            const [search, setSearch] = useState('');
-            const [formData, setFormData] = useState({ title: '', description: '', category: 'Breaking News', location: '', urgency: 'Medium' });
+  </div>
 
-            useEffect(() => {
-                auth.signInAnonymously().catch(e => console.error(e));
-                const unsubscribe = db.collection('mysteries').orderBy('createdAt', 'desc').onSnapshot(snap => {
-                    setMysteries(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-                });
-                return () => unsubscribe();
-            }, []);
+  <!-- HEADER -->
 
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                db.collection('mysteries').add({
-                    ...formData,
-                    status: 'Unsolved',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                setFormData({ title: '', description: '', category: 'Breaking News', location: '', urgency: 'Medium' });
-                setView('feed');
-            };
+  <header class="sticky top-0 z-50 glass">
 
-            const filtered = mysteries.filter(m => m.title?.toLowerCase().includes(search.toLowerCase()));
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
-            return (
-                <div className="min-h-screen">
-                    {/* Navigation */}
-                    <nav className="sticky top-0 z-50 glass px-6 py-4 flex items-center justify-between border-b border-white/10">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('feed')}>
-                            <div className="p-2 bg-intel-cyan/20 rounded-lg text-intel-cyan"><IconNews /></div>
-                            <h1 className="text-xl font-black tracking-tighter text-white">NEWS<span className="text-intel-cyan">INTEL</span></h1>
-                        </div>
-                        <button onClick={() => setView('submit')} className="bg-white text-black px-4 py-2 rounded-full text-xs font-bold hover:bg-slate-200 transition-all flex items-center gap-2">
-                            <IconPlus /> REPORT MYSTERY
-                        </button>
-                    </nav>
+      <div>
 
-                    <main className="max-w-6xl mx-auto p-6">
-                        {view === 'feed' ? (
-                            <div className="space-y-8">
-                                <div className="relative">
-                                    <input 
-                                        type="text" placeholder="Search investigation archives..." 
-                                        className="w-full bg-intel-input border border-intel-border p-4 rounded-xl text-sm focus:border-intel-cyan outline-none"
-                                        onChange={(e) => setSearch(e.target.value)}
-                                    />
-                                </div>
+        <h1 class="text-3xl font-black tracking-tight">
+          NEWS <span class="text-cyan-400">INTEL</span>
+        </h1>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {filtered.map(m => (
-                                        <div key={m.id} className="glass p-6 rounded-3xl hover:border-white/20 transition-all flex flex-col h-full">
-                                            <div className="flex justify-between mb-4">
-                                                <span className="text-[10px] font-bold px-2 py-1 bg-white/5 rounded border border-white/10 uppercase tracking-widest">{m.category}</span>
-                                                <span className="text-[10px] font-bold text-intel-rose uppercase tracking-widest">{m.urgency}</span>
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white mb-3 leading-tight">{m.title}</h3>
-                                            <p className="text-sm text-slate-400 line-clamp-4 mb-6 leading-relaxed">{m.description}</p>
-                                            <div className="mt-auto pt-4 border-t border-white/5 flex justify-between items-center text-[10px] font-mono text-slate-500 uppercase">
-                                                <span>{m.location || 'GLOBAL'}</span>
-                                                <button onClick={() => db.collection('mysteries').doc(m.id).delete()} className="text-slate-600 hover:text-intel-rose transition-colors"><IconTrash /></button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="max-w-2xl mx-auto py-10">
-                                <h2 className="text-3xl font-black text-white mb-8">Submit News Intel</h2>
-                                <form onSubmit={handleSubmit} className="glass p-8 rounded-[2rem] space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">News Heading</label>
-                                        <input 
-                                            required type="text" value={formData.title}
-                                            onChange={e => setFormData({...formData, title: e.target.value})}
-                                            className="w-full bg-intel-input border border-intel-border p-4 rounded-xl text-lg font-bold text-white focus:border-intel-cyan outline-none"
-                                            placeholder="Enter impactful headline..."
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest ml-1">News Details</label>
-                                        <textarea 
-                                            required rows="6" value={formData.description}
-                                            onChange={e => setFormData({...formData, description: e.target.value})}
-                                            className="w-full bg-intel-input border border-intel-border p-4 rounded-xl text-sm leading-relaxed text-slate-300 focus:border-intel-cyan outline-none resize-none"
-                                            placeholder="Provide evidence and descriptions..."
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="bg-intel-input border border-intel-border p-4 rounded-xl text-xs font-bold text-white outline-none">
-                                            <option>Breaking News</option><option>Social Viral</option><option>UFO/Military</option><option>Paranormal</option>
-                                        </select>
-                                        <input type="text" placeholder="Location" value={formData.location} onChange={e => setFormData({...formData, location: e.target.value})} className="bg-intel-input border border-intel-border p-4 rounded-xl text-xs font-bold text-white outline-none" />
-                                    </div>
-                                    <button type="submit" className="w-full bg-intel-cyan text-black font-black py-4 rounded-xl hover:scale-[0.98] transition-all">BROADCAST INTEL</button>
-                                </form>
-                            </div>
-                        )}
-                    </main>
+        <p class="text-xs uppercase tracking-[0.3em] text-slate-500 mt-2">
+          World Mystery Tracking Network
+        </p>
 
-                    <footer className="mt-20 border-t border-white/5 p-10 text-center">
-                        <p className="text-[9px] font-mono font-bold text-slate-800 tracking-[0.4em] uppercase italic">
-                            © 2026 NEWS INTEL NETWORK // ENCRYPTED CHANNEL // NO LOGS KEPT
-                        </p>
-                    </footer>
-                </div>
-            );
+      </div>
+
+      <div class="text-xs uppercase tracking-widest text-slate-500 font-bold">
+        Realtime Investigation Feed
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- MAIN -->
+
+  <main class="max-w-7xl mx-auto px-6 py-10 relative z-10">
+
+    <div class="grid lg:grid-cols-3 gap-8">
+
+      <!-- FORM -->
+
+      <div class="lg:col-span-1">
+
+        <div class="glass rounded-3xl p-8 sticky top-28">
+
+          <h2 class="text-2xl font-black mb-6">
+            Submit Mystery
+          </h2>
+
+          <form id="mysteryForm" class="space-y-5">
+
+            <input
+              id="title"
+              type="text"
+              placeholder="Mystery Title"
+              class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            />
+
+            <textarea
+              id="description"
+              placeholder="Mystery Description"
+              rows="6"
+              class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none resize-none"
+            ></textarea>
+
+            <select
+              id="category"
+              class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+            >
+              <option>Breaking News</option>
+              <option>Crime</option>
+              <option>Paranormal</option>
+              <option>Social Viral</option>
+              <option>Tech</option>
+              <option>UFO/Military</option>
+            </select>
+
+            <button
+              type="submit"
+              class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black py-4 rounded-2xl transition-all"
+            >
+              Broadcast Intel
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- CONTENT -->
+
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- SEARCH -->
+
+        <div class="glass rounded-3xl p-5">
+
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search mystery news..."
+            class="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none"
+          />
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="grid md:grid-cols-3 gap-5">
+
+          <div class="glass rounded-3xl p-6">
+
+            <p class="text-slate-500 text-xs uppercase tracking-widest font-bold mb-2">
+              Total Records
+            </p>
+
+            <h2
+              id="totalCount"
+              class="text-4xl font-black"
+            >
+              0
+            </h2>
+
+          </div>
+
+          <div class="glass rounded-3xl p-6">
+
+            <p class="text-slate-500 text-xs uppercase tracking-widest font-bold mb-2">
+              Solved
+            </p>
+
+            <h2
+              id="solvedCount"
+              class="text-4xl font-black text-emerald-400"
+            >
+              0
+            </h2>
+
+          </div>
+
+          <div class="glass rounded-3xl p-6">
+
+            <p class="text-slate-500 text-xs uppercase tracking-widest font-bold mb-2">
+              Unsolved
+            </p>
+
+            <h2
+              id="unsolvedCount"
+              class="text-4xl font-black text-rose-400"
+            >
+              0
+            </h2>
+
+          </div>
+
+        </div>
+
+        <!-- LIST -->
+
+        <div
+          id="mysteryList"
+          class="grid md:grid-cols-2 gap-6"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FIREBASE -->
+
+  <script type="module">
+
+    import { initializeApp }
+
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+    import {
+
+      getFirestore,
+
+      collection,
+
+      addDoc,
+
+      deleteDoc,
+
+      updateDoc,
+
+      doc,
+
+      onSnapshot
+
+    }
+
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
+
+      authDomain: "mystery-fff8d.firebaseapp.com",
+
+      projectId: "mystery-fff8d",
+
+      storageBucket: "mystery-fff8d.firebasestorage.app",
+
+      messagingSenderId: "1082125532602",
+
+      appId: "1:1082125532602:web:33b205e3047200d95d3183"
+    };
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const db =
+      getFirestore(app);
+
+    const mysteryCollection =
+      collection(db, "mysteries");
+
+    let mysteries = [];
+
+    // REALTIME
+
+    onSnapshot(mysteryCollection, (snapshot) => {
+
+      mysteries =
+        snapshot.docs.map((docItem) => ({
+          id: docItem.id,
+          ...docItem.data()
+        }));
+
+      mysteries.sort(
+        (a, b) =>
+          b.createdAt - a.createdAt
+      );
+
+      renderMysteries();
+    });
+
+    // ADD
+
+    document
+      .getElementById("mysteryForm")
+      .addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const title =
+          document
+            .getElementById("title")
+            .value
+            .trim();
+
+        const description =
+          document
+            .getElementById("description")
+            .value
+            .trim();
+
+        const category =
+          document
+            .getElementById("category")
+            .value;
+
+        if (!title || !description) {
+
+          alert("Fill all fields");
+
+          return;
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+        await addDoc(
+          mysteryCollection,
+          {
+            title,
+            description,
+            category,
+            status: "Unsolved",
+            createdAt: Date.now()
+          }
+        );
+
+        document.getElementById("title").value = "";
+
+        document.getElementById("description").value = "";
+      });
+
+    // SEARCH
+
+    document
+      .getElementById("searchInput")
+      .addEventListener("keyup", renderMysteries);
+
+    // RENDER
+
+    function renderMysteries() {
+
+      const container =
+        document.getElementById("mysteryList");
+
+      const search =
+        document
+          .getElementById("searchInput")
+          .value
+          .toLowerCase();
+
+      container.innerHTML = "";
+
+      let solved = 0;
+
+      mysteries.forEach((mystery) => {
+
+        const titleMatch =
+          mystery.title
+            .toLowerCase()
+            .includes(search);
+
+        const descMatch =
+          mystery.description
+            .toLowerCase()
+            .includes(search);
+
+        if (!titleMatch && !descMatch) {
+          return;
+        }
+
+        if (mystery.status === "Solved") {
+          solved++;
+        }
+
+        const statusColor =
+
+          mystery.status === "Solved"
+
+            ? "bg-emerald-500/20 text-emerald-400"
+
+            : "bg-rose-500/20 text-rose-400";
+
+        const card =
+          document.createElement("div");
+
+        card.className =
+          "glass rounded-3xl p-6";
+
+        card.innerHTML = `
+
+          <div class="flex justify-between items-start gap-4 mb-5">
+
+            <div>
+
+              <h2 class="text-2xl font-black text-white mb-2">
+                ${mystery.title}
+              </h2>
+
+              <div class="flex gap-2 flex-wrap">
+
+                <span class="px-3 py-1 rounded-full text-xs ${statusColor}">
+                  ${mystery.status}
+                </span>
+
+                <span class="px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-400">
+                  ${mystery.category}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <p class="text-slate-300 leading-7 whitespace-pre-wrap mb-6">
+            ${mystery.description}
+          </p>
+
+          <div class="flex flex-wrap gap-3">
+
+            <button
+              class="solveBtn bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-xl text-sm font-bold"
+              data-id="${mystery.id}"
+            >
+              Toggle Status
+            </button>
+
+            <button
+              class="editBtn bg-yellow-500 hover:bg-yellow-400 text-black px-4 py-2 rounded-xl text-sm font-bold"
+              data-id="${mystery.id}"
+            >
+              Edit
+            </button>
+
+            <button
+              class="deleteBtn bg-rose-600 hover:bg-rose-500 px-4 py-2 rounded-xl text-sm font-bold"
+              data-id="${mystery.id}"
+            >
+              Delete
+            </button>
+
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // STATS
+
+      document.getElementById("totalCount").innerText =
+        mysteries.length;
+
+      document.getElementById("solvedCount").innerText =
+        solved;
+
+      document.getElementById("unsolvedCount").innerText =
+        mysteries.length - solved;
+
+      bindButtons();
+    }
+
+    // BUTTONS
+
+    function bindButtons() {
+
+      // DELETE
+
+      document
+        .querySelectorAll(".deleteBtn")
+        .forEach((btn) => {
+
+          btn.addEventListener("click", async () => {
+
+            const id =
+              btn.dataset.id;
+
+            await deleteDoc(
+              doc(db, "mysteries", id)
+            );
+          });
+        });
+
+      // SOLVE
+
+      document
+        .querySelectorAll(".solveBtn")
+        .forEach((btn) => {
+
+          btn.addEventListener("click", async () => {
+
+            const id =
+              btn.dataset.id;
+
+            const mystery =
+              mysteries.find(m => m.id === id);
+
+            const nextStatus =
+
+              mystery.status === "Solved"
+
+                ? "Unsolved"
+
+                : "Solved";
+
+            await updateDoc(
+              doc(db, "mysteries", id),
+              {
+                status: nextStatus
+              }
+            );
+          });
+        });
+
+      // EDIT
+
+      document
+        .querySelectorAll(".editBtn")
+        .forEach((btn) => {
+
+          btn.addEventListener("click", async () => {
+
+            const id =
+              btn.dataset.id;
+
+            const mystery =
+              mysteries.find(m => m.id === id);
+
+            const newTitle =
+              prompt(
+                "Edit Title",
+                mystery.title
+              );
+
+            if (newTitle === null) {
+              return;
+            }
+
+            const newDesc =
+              prompt(
+                "Edit Description",
+                mystery.description
+              );
+
+            if (newDesc === null) {
+              return;
+            }
+
+            await updateDoc(
+              doc(db, "mysteries", id),
+              {
+                title: newTitle,
+                description: newDesc
+              }
+            );
+          });
+        });
+    }
+
+  </script>
+
 </body>
 </html>
