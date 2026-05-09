@@ -39,8 +39,6 @@
 
   <div class="max-w-7xl mx-auto p-6">
 
-    <!-- HEADER -->
-
     <div class="text-center mb-10">
 
       <h1 class="text-5xl font-bold mb-4">
@@ -174,19 +172,83 @@
 
   </div>
 
-  <!-- APP SCRIPT -->
+  <!-- FIREBASE -->
 
-  <script>
+  <script type="module">
 
-    var mysteries =
-      JSON.parse(localStorage.getItem('mysteries')) || [];
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-    function saveMysteries() {
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc,
+      updateDoc
+    }
+    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-      localStorage.setItem(
-        'mysteries',
-        JSON.stringify(mysteries)
-      );
+    const firebaseConfig = {
+
+      apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
+
+      authDomain: "mystery-fff8d.firebaseapp.com",
+
+      projectId: "mystery-fff8d",
+
+      storageBucket: "mystery-fff8d.firebasestorage.app",
+
+      messagingSenderId: "1082125532602",
+
+      appId: "1:1082125532602:web:33b205e3047200d95d3183"
+    };
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const db =
+      getFirestore(app);
+
+    var mysteries = [];
+
+    async function saveMysteryToFirebase(mystery) {
+
+      try {
+
+        await addDoc(
+          collection(db, "mysteries"),
+          mystery
+        );
+
+      } catch(error) {
+
+        console.error(error);
+      }
+    }
+
+    async function loadMysteries() {
+
+      mysteries = [];
+
+      const querySnapshot =
+        await getDocs(
+          collection(db, "mysteries")
+        );
+
+      querySnapshot.forEach(function(docItem) {
+
+        var data =
+          docItem.data();
+
+        data.firebaseId =
+          docItem.id;
+
+        mysteries.push(data);
+      });
+
+      renderMysteries();
     }
 
     function updateStats() {
@@ -206,7 +268,7 @@
         mysteries.length - solved;
     }
 
-    function addMystery() {
+    async function addMystery() {
 
       var title =
         document.getElementById('title').value.trim();
@@ -224,14 +286,17 @@
         return;
       }
 
-      mysteries.unshift({
+      var mysteryData = {
+
         title: title,
         description: description,
         priority: priority,
         solved: false
-      });
+      };
 
-      saveMysteries();
+      await saveMysteryToFirebase(mysteryData);
+
+      mysteries.unshift(mysteryData);
 
       renderMysteries();
 
@@ -239,25 +304,39 @@
       document.getElementById('description').value = '';
     }
 
-    function deleteMystery(index) {
+    async function deleteMystery(index) {
 
-      if (!confirm('Delete this mystery?')) {
+      var confirmDelete =
+        confirm('Delete this mystery?');
+
+      if (!confirmDelete) {
         return;
       }
 
-      mysteries.splice(index, 1);
+      try {
 
-      saveMysteries();
+        await deleteDoc(
+          doc(
+            db,
+            "mysteries",
+            mysteries[index].firebaseId
+          )
+        );
 
-      renderMysteries();
+        mysteries.splice(index, 1);
+
+        renderMysteries();
+
+      } catch(error) {
+
+        console.error(error);
+      }
     }
 
     function toggleSolved(index) {
 
       mysteries[index].solved =
         !mysteries[index].solved;
-
-      saveMysteries();
 
       renderMysteries();
     }
@@ -270,35 +349,21 @@
       var newTitle =
         prompt('Edit title', mystery.title);
 
-      if (newTitle === null) {
-        return;
-      }
+      if (newTitle === null) return;
 
       var newDescription =
-        prompt('Edit description', mystery.description);
-
-      if (newDescription === null) {
-        return;
-      }
-
-      var newPriority =
         prompt(
-          'Priority: Low / Medium / High',
-          mystery.priority
+          'Edit description',
+          mystery.description
         );
 
-      if (newPriority === null) {
-        return;
-      }
+      if (newDescription === null) return;
 
-      mysteries[index] = {
-        title: newTitle,
-        description: newDescription,
-        priority: newPriority,
-        solved: mystery.solved
-      };
+      mystery.title =
+        newTitle;
 
-      saveMysteries();
+      mystery.description =
+        newDescription;
 
       renderMysteries();
     }
@@ -342,19 +407,6 @@
             'bg-red-500/20 text-red-300';
         }
 
-        var solvedButton = '';
-
-        if (mystery.solved) {
-
-          solvedButton =
-            '<button onclick=\"toggleSolved(' + index + ')\" class=\"bg-green-500 hover:bg-green-600 px-4 py-2 rounded-xl font-bold\">Solved</button>';
-
-        } else {
-
-          solvedButton =
-            '<button onclick=\"toggleSolved(' + index + ')\" class=\"bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-xl font-bold\">Mark Solved</button>';
-        }
-
         var card =
           document.createElement('div');
 
@@ -363,31 +415,29 @@
 
         card.innerHTML =
 
-          '<div class=\"flex flex-wrap gap-2 items-center mb-5\">' +
+          '<div class="flex flex-wrap gap-2 items-center mb-5">' +
 
-          '<h2 class=\"text-3xl font-bold leading-tight\">' +
+          '<h2 class="text-3xl font-bold leading-tight">' +
           mystery.title +
           '</h2>' +
 
-          '<span class=\"px-3 py-1 rounded-full text-sm ' +
+          '<span class="px-3 py-1 rounded-full text-sm ' +
           priorityClass +
-          '\">' +
+          '">' +
           mystery.priority +
           '</span>' +
 
           '</div>' +
 
-          '<p class=\"text-slate-300 leading-8 text-lg whitespace-pre-wrap\">' +
+          '<p class="text-slate-300 leading-8 text-lg whitespace-pre-wrap">' +
           mystery.description +
           '</p>' +
 
-          '<div class=\"flex flex-wrap gap-3 mt-8\">' +
+          '<div class="flex flex-wrap gap-3 mt-8">' +
 
-          solvedButton +
+          '<button onclick="editMystery(' + index + ')" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold">Edit</button>' +
 
-          '<button onclick=\"editMystery(' + index + ')\" class=\"bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold\">Edit</button>' +
-
-          '<button onclick=\"deleteMystery(' + index + ')\" class=\"bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold\">Delete</button>' +
+          '<button onclick="deleteMystery(' + index + ')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>' +
 
           '</div>';
 
@@ -397,7 +447,7 @@
       updateStats();
     }
 
-    function importBulkText() {
+    async function importBulkText() {
 
       var text =
         document.getElementById('bulkInput').value;
@@ -412,13 +462,13 @@
       var items =
         text.split(/[০-৯]+\./);
 
-      items.forEach(function(item) {
+      for (var i = 0; i < items.length; i++) {
 
         var clean =
-          item.trim();
+          items[i].trim();
 
         if (!clean) {
-          return;
+          continue;
         }
 
         var parts =
@@ -444,15 +494,18 @@
             clean;
         }
 
-        mysteries.unshift({
+        var mysteryData = {
+
           title: title,
           description: description,
           priority: 'Medium',
           solved: false
-        });
-      });
+        };
 
-      saveMysteries();
+        await saveMysteryToFirebase(mysteryData);
+
+        mysteries.unshift(mysteryData);
+      }
 
       renderMysteries();
 
@@ -469,51 +522,28 @@
 
 ২. এআই ভয়েস ক্লোনিং স্ক্যাম: পরিচিত মানুষের কণ্ঠস্বর নকল করে প্রতারণা।
 
-৩. ডিপফেক পর্নোগ্রাফি: নারীদের লক্ষ্য করে তৈরি ভুয়া ভিডিও বৃদ্ধি।
-
-৪. অনলাইন রোমান্স ট্র্যাপ: প্রেমের ফাঁদে ব্ল্যাকমেইল।
-
-৫. কিডস কন্টেন্ট ও ব্রেন ওয়াশ: শিশুদের কার্টুনের আড়ালে ক্ষতিকর বার্তা।`;
+৩. ডিপফেক পর্নোগ্রাফি: নারীদের লক্ষ্য করে তৈরি ভুয়া ভিডিও বৃদ্ধি।`;
     }
 
-    renderMysteries();
+    window.addMystery =
+      addMystery;
 
-  </script>
+    window.deleteMystery =
+      deleteMystery;
 
-  <!-- FIREBASE -->
+    window.editMystery =
+      editMystery;
 
-  <script type="module">
+    window.importBulkText =
+      importBulkText;
 
-    import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    window.loadSample =
+      loadSample;
 
-    import {
-      getFirestore
-    }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    window.renderMysteries =
+      renderMysteries;
 
-    const firebaseConfig = {
-
-      apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
-
-      authDomain: "mystery-fff8d.firebaseapp.com",
-
-      projectId: "mystery-fff8d",
-
-      storageBucket: "mystery-fff8d.firebasestorage.app",
-
-      messagingSenderId: "1082125532602",
-
-      appId: "1:1082125532602:web:33b205e3047200d95d3183"
-    };
-
-    const app =
-      initializeApp(firebaseConfig);
-
-    const db =
-      getFirestore(app);
-
-    console.log("Firebase Connected");
+    loadMysteries();
 
   </script>
 
