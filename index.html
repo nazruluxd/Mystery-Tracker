@@ -18,535 +18,600 @@
     }
 
     .glass {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    textarea,
     input,
+    textarea,
     select {
       color: white;
-    }
-
-    button {
-      transition: 0.2s;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="max-w-7xl mx-auto p-6">
+<div class="max-w-7xl mx-auto p-6">
 
-    <div class="text-center mb-10">
+  <!-- HEADER -->
 
-      <h1 class="text-5xl font-bold mb-4">
-        🔍 Mystery Tracker Bangladesh
-      </h1>
+  <div class="text-center mb-10">
 
-      <p class="text-slate-300 text-lg">
-        বাংলাদেশের ভাইরাল ও রহস্যময় ইস্যু ট্র্যাকার
-      </p>
+    <h1 class="text-5xl font-bold mb-4">
+      🔍 Mystery Tracker Bangladesh
+    </h1>
 
-    </div>
+    <p class="text-slate-300 text-lg">
+      বাংলাদেশের ভাইরাল ও রহস্যময় ইস্যু ট্র্যাকার
+    </p>
 
-    <!-- ADD SINGLE -->
+  </div>
 
-    <div class="glass rounded-3xl p-6 mb-8">
+  <!-- ADD -->
 
-      <h2 class="text-2xl font-bold mb-5">
-        Add Single Mystery
-      </h2>
+  <div class="glass rounded-3xl p-6 mb-8">
 
-      <div class="grid md:grid-cols-3 gap-4">
+    <h2 class="text-2xl font-bold mb-5">
+      Add Mystery
+    </h2>
 
-        <input
-          id="title"
-          type="text"
-          placeholder="Mystery title"
-          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-        >
+    <div class="grid md:grid-cols-3 gap-4">
 
-        <select
-          id="priority"
-          class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-        >
-          <option>Low</option>
-          <option>Medium</option>
-          <option>High</option>
-        </select>
+      <input
+        id="title"
+        type="text"
+        placeholder="Mystery title"
+        class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+      >
 
-        <button
-          onclick="addMystery()"
-          class="bg-cyan-500 hover:bg-cyan-600 rounded-xl p-3 font-bold"
-        >
-          Add Mystery
-        </button>
-
-      </div>
-
-      <textarea
-        id="description"
-        placeholder="Description"
-        class="w-full mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none h-32"
-      ></textarea>
-
-    </div>
-
-    <!-- BULK IMPORT -->
-
-    <div class="glass rounded-3xl p-6 mb-8">
-
-      <div class="flex flex-wrap justify-between gap-4 mb-4">
-
-        <h2 class="text-2xl font-bold">
-          Bulk Import
-        </h2>
-
-        <button
-          onclick="loadSample()"
-          class="bg-purple-500 hover:bg-purple-600 px-5 py-3 rounded-xl font-bold"
-        >
-          Auto Load Sample
-        </button>
-
-      </div>
-
-      <textarea
-        id="bulkInput"
-        placeholder="Paste all mysteries here"
-        class="w-full h-72 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none"
-      ></textarea>
+      <select
+        id="priority"
+        class="bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+      >
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+      </select>
 
       <button
-        onclick="importBulkText()"
-        class="mt-4 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold"
+        id="addBtn"
+        class="bg-cyan-500 hover:bg-cyan-600 rounded-xl p-3 font-bold"
       >
-        Import From Text
+        Add Mystery
       </button>
 
     </div>
 
-    <!-- SEARCH -->
-
-    <div class="glass rounded-2xl p-5 mb-8">
-
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Search mysteries..."
-        onkeyup="renderMysteries()"
-        class="w-full bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
-      >
-
-    </div>
-
-    <!-- STATS -->
-
-    <div class="grid md:grid-cols-3 gap-4 mb-8">
-
-      <div class="glass rounded-2xl p-6 text-center">
-        <p class="text-slate-300 mb-2">Total</p>
-        <h2 id="totalCount" class="text-4xl font-bold">0</h2>
-      </div>
-
-      <div class="glass rounded-2xl p-6 text-center">
-        <p class="text-slate-300 mb-2">Solved</p>
-        <h2 id="solvedCount" class="text-4xl font-bold text-green-400">0</h2>
-      </div>
-
-      <div class="glass rounded-2xl p-6 text-center">
-        <p class="text-slate-300 mb-2">Unsolved</p>
-        <h2 id="unsolvedCount" class="text-4xl font-bold text-red-400">0</h2>
-      </div>
-
-    </div>
-
-    <!-- LIST -->
-
-    <div
-      id="mysteryList"
-      class="grid md:grid-cols-2 gap-6"
-    ></div>
+    <textarea
+      id="description"
+      placeholder="Description"
+      class="w-full mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none h-32"
+    ></textarea>
 
   </div>
 
-  <!-- FIREBASE -->
+  <!-- BULK -->
 
-  <script type="module">
+  <div class="glass rounded-3xl p-6 mb-8">
 
-    import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    <div class="flex justify-between flex-wrap gap-4 mb-4">
 
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      deleteDoc,
-      doc,
-      updateDoc
-    }
-    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+      <h2 class="text-2xl font-bold">
+        Bulk Import
+      </h2>
 
-    const firebaseConfig = {
+      <button
+        id="sampleBtn"
+        class="bg-purple-500 hover:bg-purple-600 px-5 py-3 rounded-xl font-bold"
+      >
+        Auto Load Sample
+      </button>
 
-      apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
+    </div>
 
-      authDomain: "mystery-fff8d.firebaseapp.com",
+    <textarea
+      id="bulkInput"
+      placeholder="Paste mysteries here"
+      class="w-full h-72 bg-slate-900/70 border border-slate-700 rounded-xl p-4 outline-none"
+    ></textarea>
 
-      projectId: "mystery-fff8d",
+    <button
+      id="importBtn"
+      class="mt-4 bg-green-500 hover:bg-green-600 px-6 py-3 rounded-xl font-bold"
+    >
+      Import From Text
+    </button>
 
-      storageBucket: "mystery-fff8d.firebasestorage.app",
+  </div>
 
-      messagingSenderId: "1082125532602",
+  <!-- SEARCH -->
 
-      appId: "1:1082125532602:web:33b205e3047200d95d3183"
-    };
+  <div class="glass rounded-2xl p-5 mb-8">
 
-    const app =
-      initializeApp(firebaseConfig);
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search mysteries..."
+      class="w-full bg-slate-900/70 border border-slate-700 rounded-xl p-3 outline-none"
+    >
 
-    const db =
-      getFirestore(app);
+  </div>
 
-    var mysteries = [];
+  <!-- STATS -->
 
-    async function saveMysteryToFirebase(mystery) {
+  <div class="grid md:grid-cols-3 gap-4 mb-8">
 
-      try {
+    <div class="glass rounded-2xl p-6 text-center">
+      <p class="text-slate-300 mb-2">Total</p>
+      <h2 id="totalCount" class="text-4xl font-bold">0</h2>
+    </div>
 
-        await addDoc(
-          collection(db, "mysteries"),
-          mystery
-        );
+    <div class="glass rounded-2xl p-6 text-center">
+      <p class="text-slate-300 mb-2">Solved</p>
+      <h2 id="solvedCount" class="text-4xl font-bold text-green-400">0</h2>
+    </div>
 
-      } catch(error) {
+    <div class="glass rounded-2xl p-6 text-center">
+      <p class="text-slate-300 mb-2">Unsolved</p>
+      <h2 id="unsolvedCount" class="text-4xl font-bold text-red-400">0</h2>
+    </div>
 
-        console.error(error);
-      }
-    }
+  </div>
 
-    async function loadMysteries() {
+  <!-- LIST -->
 
-      mysteries = [];
+  <div
+    id="mysteryList"
+    class="grid md:grid-cols-2 gap-6"
+  ></div>
 
-      const querySnapshot =
-        await getDocs(
-          collection(db, "mysteries")
-        );
+</div>
 
-      querySnapshot.forEach(function(docItem) {
+<script type="module">
 
-        var data =
-          docItem.data();
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-        data.firebaseId =
-          docItem.id;
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-        mysteries.push(data);
-      });
+const firebaseConfig = {
 
-      renderMysteries();
-    }
+  apiKey: "AIzaSyBmsAClSWTfopqVJd8myG7vqQDSd9Z2XkA",
 
-    function updateStats() {
+  authDomain: "mystery-fff8d.firebaseapp.com",
 
-      var solved =
-        mysteries.filter(function(item) {
-          return item.solved;
-        }).length;
+  projectId: "mystery-fff8d",
 
-      document.getElementById('totalCount').innerText =
-        mysteries.length;
+  storageBucket: "mystery-fff8d.firebasestorage.app",
 
-      document.getElementById('solvedCount').innerText =
-        solved;
+  messagingSenderId: "1082125532602",
 
-      document.getElementById('unsolvedCount').innerText =
-        mysteries.length - solved;
-    }
+  appId: "1:1082125532602:web:33b205e3047200d95d3183"
+};
 
-    async function addMystery() {
+const app =
+  initializeApp(firebaseConfig);
 
-      var title =
-        document.getElementById('title').value.trim();
+const db =
+  getFirestore(app);
 
-      var description =
-        document.getElementById('description').value.trim();
+var mysteries = [];
 
-      var priority =
-        document.getElementById('priority').value;
+async function loadMysteries() {
 
-      if (!title || !description) {
+  mysteries = [];
 
-        alert('Please fill all fields');
+  const querySnapshot =
+    await getDocs(
+      collection(db, "mysteries")
+    );
 
-        return;
-      }
+  querySnapshot.forEach(function(docItem) {
 
-      var mysteryData = {
+    var data =
+      docItem.data();
 
-        title: title,
-        description: description,
-        priority: priority,
-        solved: false
-      };
+    data.firebaseId =
+      docItem.id;
 
-      await saveMysteryToFirebase(mysteryData);
+    mysteries.push(data);
+  });
 
-      mysteries.unshift(mysteryData);
+  renderMysteries();
+}
 
-      renderMysteries();
+function updateStats() {
 
-      document.getElementById('title').value = '';
-      document.getElementById('description').value = '';
-    }
+  var solved =
+    mysteries.filter(function(item) {
+      return item.solved;
+    }).length;
 
-    async function deleteMystery(index) {
+  document.getElementById('totalCount').innerText =
+    mysteries.length;
 
-      var confirmDelete =
-        confirm('Delete this mystery?');
+  document.getElementById('solvedCount').innerText =
+    solved;
 
-      if (!confirmDelete) {
-        return;
-      }
+  document.getElementById('unsolvedCount').innerText =
+    mysteries.length - solved;
+}
 
-      try {
+async function addMystery() {
 
-        await deleteDoc(
-          doc(
-            db,
-            "mysteries",
-            mysteries[index].firebaseId
-          )
-        );
+  var title =
+    document.getElementById('title').value.trim();
 
-        mysteries.splice(index, 1);
+  var description =
+    document.getElementById('description').value.trim();
 
-        renderMysteries();
+  var priority =
+    document.getElementById('priority').value;
 
-      } catch(error) {
+  if (!title || !description) {
 
-        console.error(error);
-      }
-    }
+    alert('Please fill all fields');
 
-    function toggleSolved(index) {
+    return;
+  }
 
-      mysteries[index].solved =
-        !mysteries[index].solved;
+  try {
 
-      renderMysteries();
-    }
-
-    function editMystery(index) {
-
-      var mystery =
-        mysteries[index];
-
-      var newTitle =
-        prompt('Edit title', mystery.title);
-
-      if (newTitle === null) return;
-
-      var newDescription =
-        prompt(
-          'Edit description',
-          mystery.description
-        );
-
-      if (newDescription === null) return;
-
-      mystery.title =
-        newTitle;
-
-      mystery.description =
-        newDescription;
-
-      renderMysteries();
-    }
-
-    function renderMysteries() {
-
-      var container =
-        document.getElementById('mysteryList');
-
-      var search =
-        document.getElementById('searchInput')
-          .value
-          .toLowerCase();
-
-      container.innerHTML = '';
-
-      mysteries.forEach(function(mystery, index) {
-
-        var titleMatch =
-          mystery.title.toLowerCase().indexOf(search) !== -1;
-
-        var descMatch =
-          mystery.description.toLowerCase().indexOf(search) !== -1;
-
-        if (!titleMatch && !descMatch) {
-          return;
-        }
-
-        var priorityClass =
-          'bg-green-500/20 text-green-300';
-
-        if (mystery.priority === 'Medium') {
-
-          priorityClass =
-            'bg-yellow-500/20 text-yellow-300';
-        }
-
-        if (mystery.priority === 'High') {
-
-          priorityClass =
-            'bg-red-500/20 text-red-300';
-        }
-
-        var card =
-          document.createElement('div');
-
-        card.className =
-          'glass rounded-3xl p-6';
-
-        card.innerHTML =
-
-          '<div class="flex flex-wrap gap-2 items-center mb-5">' +
-
-          '<h2 class="text-3xl font-bold leading-tight">' +
-          mystery.title +
-          '</h2>' +
-
-          '<span class="px-3 py-1 rounded-full text-sm ' +
-          priorityClass +
-          '">' +
-          mystery.priority +
-          '</span>' +
-
-          '</div>' +
-
-          '<p class="text-slate-300 leading-8 text-lg whitespace-pre-wrap">' +
-          mystery.description +
-          '</p>' +
-
-          '<div class="flex flex-wrap gap-3 mt-8">' +
-
-          '<button onclick="editMystery(' + index + ')" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-xl font-bold">Edit</button>' +
-
-          '<button onclick="deleteMystery(' + index + ')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>' +
-
-          '</div>';
-
-        container.appendChild(card);
-      });
-
-      updateStats();
-    }
-
-    async function importBulkText() {
-
-      var text =
-        document.getElementById('bulkInput').value;
-
-      if (!text.trim()) {
-
-        alert('Paste something first');
-
-        return;
-      }
-
-      var items =
-        text.split(/[০-৯]+\./);
-
-      for (var i = 0; i < items.length; i++) {
-
-        var clean =
-          items[i].trim();
-
-        if (!clean) {
-          continue;
-        }
-
-        var parts =
-          clean.split(':');
-
-        var title = '';
-        var description = '';
-
-        if (parts.length > 1) {
-
-          title =
-            parts[0].trim();
-
-          description =
-            parts.slice(1).join(':').trim();
-
-        } else {
-
-          title =
-            clean.substring(0, 60);
-
-          description =
-            clean;
-        }
-
-        var mysteryData = {
-
+    const docRef =
+      await addDoc(
+        collection(db, "mysteries"),
+        {
           title: title,
           description: description,
-          priority: 'Medium',
+          priority: priority,
           solved: false
-        };
+        }
+      );
 
-        await saveMysteryToFirebase(mysteryData);
+    mysteries.unshift({
+      firebaseId: docRef.id,
+      title: title,
+      description: description,
+      priority: priority,
+      solved: false
+    });
 
-        mysteries.unshift(mysteryData);
+    renderMysteries();
+
+    document.getElementById('title').value = '';
+
+    document.getElementById('description').value = '';
+
+  } catch(error) {
+
+    console.error(error);
+
+    alert("Firebase save failed");
+  }
+}
+
+async function deleteMystery(index) {
+
+  var confirmDelete =
+    confirm('Delete this mystery?');
+
+  if (!confirmDelete) {
+    return;
+  }
+
+  try {
+
+    await deleteDoc(
+      doc(
+        db,
+        "mysteries",
+        mysteries[index].firebaseId
+      )
+    );
+
+    mysteries.splice(index, 1);
+
+    renderMysteries();
+
+  } catch(error) {
+
+    console.error(error);
+  }
+}
+
+function renderMysteries() {
+
+  var container =
+    document.getElementById('mysteryList');
+
+  var search =
+    document.getElementById('searchInput')
+      .value
+      .toLowerCase();
+
+  container.innerHTML = '';
+
+  mysteries.forEach(function(mystery, index) {
+
+    var titleMatch =
+      mystery.title.toLowerCase().indexOf(search) !== -1;
+
+    var descMatch =
+      mystery.description.toLowerCase().indexOf(search) !== -1;
+
+    if (!titleMatch && !descMatch) {
+      return;
+    }
+
+    var priorityClass =
+      'bg-green-500/20 text-green-300';
+
+    if (mystery.priority === 'Medium') {
+
+      priorityClass =
+        'bg-yellow-500/20 text-yellow-300';
+    }
+
+    if (mystery.priority === 'High') {
+
+      priorityClass =
+        'bg-red-500/20 text-red-300';
+    }
+
+    var card =
+      document.createElement('div');
+
+    card.className =
+      'glass rounded-3xl p-6';
+
+    card.innerHTML =
+
+      '<div class="flex flex-wrap gap-2 items-center mb-5">' +
+
+      '<h2 class="text-3xl font-bold leading-tight">' +
+      mystery.title +
+      '</h2>' +
+
+      '<span class="px-3 py-1 rounded-full text-sm ' +
+      priorityClass +
+      '">' +
+      mystery.priority +
+      '</span>' +
+
+      '</div>' +
+
+      '<p class="text-slate-300 leading-8 text-lg whitespace-pre-wrap">' +
+      mystery.description +
+      '</p>' +
+
+      '<div class="flex flex-wrap gap-3 mt-8">' +
+
+      '<button data-index="' + index + '" class="deleteBtn bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>' +
+
+      '</div>';
+
+    container.appendChild(card);
+  });
+
+  updateStats();
+
+  var deleteButtons =
+    document.querySelectorAll('.deleteBtn');
+
+  deleteButtons.forEach(function(button) {
+
+    button.addEventListener(
+      'click',
+      async function() {
+
+        var index =
+          this.getAttribute('data-index');
+
+        await deleteMystery(index);
       }
+    );
+  });
+}
 
-      renderMysteries();
+async function importBulkText() {
 
-      alert('Imported successfully!');
+  var text =
+    document.getElementById('bulkInput').value;
 
-      document.getElementById('bulkInput').value = '';
+  if (!text.trim()) {
+
+    alert('Paste something first');
+
+    return;
+  }
+
+  var items =
+    text.split(/[০-৯]+\./);
+
+  for (var i = 0; i < items.length; i++) {
+
+    var clean =
+      items[i].trim();
+
+    if (!clean) {
+      continue;
     }
 
-    function loadSample() {
+    var parts =
+      clean.split(':');
 
-      document.getElementById('bulkInput').value =
+    var title = '';
+    var description = '';
 
-`১. স্বপ্ন পূরণের বাইক রহস্য: নিজের শখের বাইক বিক্রি করতে গিয়ে কান্নায় ভেঙে পড়া এক যুবকের ভিডিও ভাইরাল।
+    if (parts.length > 1) {
 
-২. এআই ভয়েস ক্লোনিং স্ক্যাম: পরিচিত মানুষের কণ্ঠস্বর নকল করে প্রতারণা।
+      title =
+        parts[0].trim();
 
-৩. ডিপফেক পর্নোগ্রাফি: নারীদের লক্ষ্য করে তৈরি ভুয়া ভিডিও বৃদ্ধি।`;
+      description =
+        parts.slice(1).join(':').trim();
+
+    } else {
+
+      title =
+        clean.substring(0, 60);
+
+      description =
+        clean;
     }
 
-    window.addMystery =
-      addMystery;
+    await addDoc(
+      collection(db, "mysteries"),
+      {
+        title: title,
+        description: description,
+        priority: 'Medium',
+        solved: false
+      }
+    );
+  }
 
-    window.deleteMystery =
-      deleteMystery;
+  await loadMysteries();
 
-    window.editMystery =
-      editMystery;
+  document.getElementById('bulkInput').value = '';
 
-    window.importBulkText =
-      importBulkText;
+  alert('Imported successfully!');
+}
 
-    window.loadSample =
-      loadSample;
+function loadSample() {
 
-    window.renderMysteries =
-      renderMysteries;
+  document.getElementById('bulkInput').value =
 
-    loadMysteries();
+`১. The Blue Sky Beam: A mysterious, concentrated blue streak of light appeared over several districts on May 9, 2026, leading to widespread UFO and military test speculation.
 
-  </script>
+২. Odisha Missile Trail: A glowing light trail seen as far as Cox’s Bazar on May 8 was later linked to a missile test from India.
+
+৩. Sundarbans Ghost Whispers: Unexplained sounds and rituals reported near ancient banyan trees and shattered temples.
+
+৪. Sudden Coastal Sea Foam: Massive accumulations of sea foam appeared on southern beaches without clear industrial explanation.
+
+৫. Silent Lightning Storms: Intense lightning displays appeared without thunder or rainfall.
+
+৬. Vanishing Ponds: Rural ponds suddenly disappeared due to illegal filling or unexplained drainage.
+
+৭. Undetected Bat Virus: A previously unknown bat virus infected humans in rural clusters.
+
+৮. Measles Surge Mystery: Health experts questioned why vaccination gaps remained high after 2024.
+
+৯. Jute Decline Mystery: Researchers linked declining jute production to hidden climate change effects.
+
+১০. Sleeping Sickness Case: Villagers experienced prolonged unexplained lethargy.
+
+১১. Localized Water Salinity Spikes: Sudden salinity increases appeared in inland freshwater zones.
+
+১২. Red Eye Syndrome: Non viral eye inflammation spread without clear environmental cause.
+
+১৩. Forced Disappearance Inquiries: Thousands of disappearance cases remain unresolved.
+
+১৪. Gazipur Family Massacre: Five family members were murdered while the husband disappeared.
+
+১৫. The Unsolved 7 Murders: Court investigations into elite force involvement continue.
+
+১৬. Disinformation Information Bombs: Coordinated anonymous propaganda campaigns spread during the 2026 election.
+
+১৭. Mob Violence Surge: Anonymous rumors triggered deadly mob attacks.
+
+১৮. The Sagar Runi Cold Case: The journalist murder mystery remains unresolved.
+
+১৯. Mystery of Osman Hadi’s Death: Riots followed the assassination while attackers remained unidentified.
+
+২০. USF Student Deaths Mystery: Bangladeshi doctoral students died mysteriously in Florida.
+
+২১. Taqi River Murder: A cold case involving an A level student continues haunting the legal system.
+
+২২. The Farooqi Assassin Inquiry: No clear perpetrator identified in the 2014 killing.
+
+২৩. Raudha Athif Medical School Death: The unresolved death remains controversial.
+
+২৪. Shadow Remittance Market: Hundi networks continue despite government crackdowns.
+
+২৫. Missing Election Funds: Rumors spread about vanished campaign money.
+
+২৬. July Charter Referendum: Constitutional shifts created political uncertainty.
+
+২৭. Killed Stories in Journalism: Journalists reported invisible political pressure suppressing stories.
+
+২৮. Middle Ground Shift: India Bangladesh relations entered a temporary cold phase.
+
+২৯. Barred Party Survival: The banned Awami League allegedly maintains underground influence.
+
+৩০. Remittance Dip Paradox: Economists remain puzzled by falling remittance flows.
+
+৩১. Islamist Resurgence: Jamaat e Islami gained major parliamentary power.
+
+৩২. July Uprising Archives: Official uprising records reportedly disappeared.
+
+৩৩. Foreign Reserve Drain: Unexplained reserve losses raised economic concerns.
+
+৩৪. Secret Economic Reforms: Anonymous sources claimed undisclosed loan negotiations.
+
+৩৫. Amina Ghost Voter Rumor: Viral claims of ghost voters spread online.
+
+৩৬. Shakrain Festival Transition: Youth culture transformed the perception of the kite festival.
+
+৩৭. Hidden Gems of 2026: Abandoned cities and secret waterfalls became viral tourism topics.
+
+৩৮. Tomb Rumors: Speculation continued regarding Kazi Nazrul Islam’s burial site.
+
+৩৯. Missing Heritage Artifacts: Museum artifacts disappeared during unrest.
+
+৪০. Modest Fashion Halo: The halal economy rapidly expanded.
+
+৪১. Dhaka Audio Secrets: Tours uncovered forgotten rebellions hidden from public history.
+
+৪২. Vanishing Migratory Birds: Jahangirnagar University lakes saw reduced migratory bird arrivals.
+
+৪৩. Arsenic Relapse: Previously safe wells again showed arsenic contamination.
+
+৪৪. Silent Earthquake Swarms: Minor tremors appeared without clear tectonic explanation.
+
+৪৫. Sudden Urban Sinkholes: Small sinkholes emerged in old Dhaka neighborhoods.
+
+৪৬. Black Water Incident: City water turned black with unidentified odor.
+
+৪৭. Unexplained Mangrove Die Off: Sundarbans mangroves died without confirmed disease.
+
+৪৮. Dhaka Micro Climate Hotspots: Certain urban blocks became dramatically hotter than nearby areas.
+
+৪৯. Floating Island Mystery: A temporary debris island vanished after 48 hours.
+
+৫০. Night Glow over Chittagong Hills: Locals repeatedly reported mysterious green lights over remote hills.`;
+}
+
+document
+  .getElementById('addBtn')
+  .addEventListener('click', addMystery);
+
+document
+  .getElementById('importBtn')
+  .addEventListener('click', importBulkText);
+
+document
+  .getElementById('sampleBtn')
+  .addEventListener('click', loadSample);
+
+document
+  .getElementById('searchInput')
+  .addEventListener('keyup', renderMysteries);
+
+loadMysteries();
+
+</script>
 
 </body>
-
 </html>
