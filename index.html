@@ -40,6 +40,12 @@
 </head>
 
 <body>
+  <button
+  onclick="bulkImport()"
+  class="bg-purple-500 hover:bg-purple-600 transition-all rounded-xl p-3 font-bold w-full mt-3"
+>
+  Bulk Import Bangladesh Mysteries
+</button>
 
   <div class="max-w-5xl mx-auto p-6">
 
@@ -114,6 +120,79 @@
   </div>
 
   <script>
+
+    function bulkImport() {
+
+  const bulkData = [
+    {
+      title: "স্বপ্ন পূরণের বাইক রহস্য",
+      description: "নিজের শখের বাইক বিক্রি করতে গিয়ে কান্নায় ভেঙে পড়া এক যুবকের ভিডিও ভাইরাল। রহস্য হলো, কে সেই অজ্ঞাত পরিচয় দানকারী ব্যক্তি যিনি তাকে বাইকটি আবার কিনে দিয়েছেন?",
+      priority: "High"
+    },
+
+    {
+      title: "মেট গালায় বাংলাদেশি তারকাদের ভুয়া উপস্থিতি",
+      description: "এআই দিয়ে তৈরি মেট গালায় বাংলাদেশি সেলিব্রিটিদের ছবি ভাইরাল হয়েছে, যা অনেকে সত্যি বলে বিশ্বাস করেছেন।",
+      priority: "Medium"
+    },
+
+    {
+      title: "ফ্লোরিডায় বাংলাদেশি ছাত্রী বৃষ্টি হত্যাকাণ্ড",
+      description: "যুক্তরাষ্ট্রে পিএইচডি শিক্ষার্থী নাহিদা সুলতানা বৃষ্টির রহস্যজনক মৃত্যু নিয়ে উত্তাল সোশ্যাল মিডিয়া।",
+      priority: "High"
+    },
+
+    {
+      title: "কিউট অপরাধীর ফ্যানডম",
+      description: "মাদকসহ গ্রেফতার হওয়া এক তরুণীর ছবি ভাইরাল হওয়ার পর সাধারণ মানুষের ক্ষোভ থেকে ক্রাশে রূপান্তরের মনস্তাত্ত্বিক রহস্য।",
+      priority: "Medium"
+    },
+
+    {
+      title: "নিখোঁজ উদ্ভাবকের গল্প",
+      description: "এক তরুণ উদ্ভাবকের কাজ ভাইরাল হওয়ার পর সরকারি সাহায্য ঘোষণার ঠিক পরপরই তার জনসমক্ষে না আসা নিয়ে রহস্য।",
+      priority: "High"
+    },
+
+    {
+      title: "পুরানো ভিডিওর ফাঁদ",
+      description: "কুষ্টিয়ায় কয়েক বছরের পুরনো ভিডিও নতুন বলে প্রচার করে গণপিটুনির ঘটনা।",
+      priority: "High"
+    },
+
+    {
+      title: "এআই ভয়েস ক্লোনিং স্ক্যাম",
+      description: "পরিচিত মানুষের গলার আওয়াজ নকল করে টাকা হাতিয়ে নেওয়ার নতুন ডিজিটাল প্রতারণা।",
+      priority: "High"
+    },
+
+    {
+      title: "সাইবার সিকিউরিটি আইন ২০২৬",
+      description: "রাস্তায় ভিডিও করলেই জেল হওয়ার গুজব এবং এর আসল সত্য নিয়ে বিভ্রান্তি।",
+      priority: "Medium"
+    },
+
+    {
+      title: "প্রথম H5N1 রোগী নিয়ে গুজব",
+      description: "সরকারি বার্তার আগেই কোনো শিশুর বার্ড ফ্লুতে আক্রান্ত হওয়ার ভাইরাল পোস্ট।",
+      priority: "Medium"
+    },
+
+    {
+      title: "রহস্যময় ইউটিউব চ্যানেল",
+      description: "গভীর রাতে রহস্যজনক লাইভ করা কিছু চ্যানেলের হঠাৎ জনপ্রিয়তা বৃদ্ধি।",
+      priority: "Low"
+    }
+  ]
+
+  mysteries.push(...bulkData)
+
+  saveMysteries()
+
+  renderMysteries()
+
+  alert("10 mysteries imported successfully!")
+}
 
     let mysteries = JSON.parse(localStorage.getItem('mysteries')) || []
 
